@@ -1,9 +1,10 @@
 import { mock } from 'jest-mock-extended';
 
-import { Advice } from '../src/advice.enum';
-import { Aspect, AspectContext } from '../src/aspect.interface';
-import { addAspect } from '../src/addAspect';
 import { CalculatorCls } from './samples/CalculatorCls.sample';
+import { addAspect } from './../src/add/add-aspect';
+import { Advice } from './../src/enum/advice.enum';
+import { Aspect, AspectContext } from './../src/interfaces/aspect.interface';
+
 
 describe('addAspect', () => {
     let calculator: CalculatorCls;

@@ -1,24 +1,50 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": ".",
+    "outDir": "./build",
+    "paths": {
+      "@add/*": ["./src/add/*"],
+      "@decorator/*": ["./src/decorator/*"],
+      "@enum/*": ["./src/enum/*"],
+      "@execution/*": ["./src/execution/*"],
+      "@functions/*": ["./src/functions/*"],
+      "@interfaces/*": ["./src/interfaces/*"],
+      "@proxy-func/*": ["./src/proxy-func/*"],
+      "@aspect-types/*": ["./src/types/*"]
+    },
+    "plugins": [
+      {
+        "name": "typescript-tslint-plugin"
+      }
+    ],
     "target": "ES2017",
-    "module": "commonjs",
+    "module": "CommonJS",
     "allowJs": true,
     "declaration": true,
-    "outDir": "build",
-    "rootDir": "src",
     "strict": true,
     "noImplicitAny": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "typeRoots" : ["./node_modules/@types", "./src/@types"],
     "experimentalDecorators": true,
-  }, 
+    "emitDecoratorMetadata": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/@types"
+    ],
+  },
+  "lib": [
+    "ESNext",
+    "ES6",
+    "DOM"
+  ],
   "include": [
-    "src", "test"
+    "src",
+    "test"
   ],
   "exclude": [
-    "node_modules", "test"
+    "node_modules",
+    "test"
   ]
 }

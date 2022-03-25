@@ -1,10 +1,12 @@
+
 import { mock } from 'jest-mock-extended';
 
-import { Advice } from '../src/advice.enum';
-import { Aspect } from '../src/aspect.interface';
-import { addAspect } from '../src/addAspect';
-import { resetAllAspects } from '../src/resetAllAspects';
 import { CalculatorCls } from './samples/CalculatorCls.sample';
+import { Advice } from './../src/enum/advice.enum';
+import { resetAllAspects } from './../src/functions/reset-all-aspects';
+import { addAspect } from './../src/add/add-aspect';
+import { Aspect } from './../src/interfaces/aspect.interface';
+
 
 describe('resetAllAspects', () => {
     let calculator: CalculatorCls;

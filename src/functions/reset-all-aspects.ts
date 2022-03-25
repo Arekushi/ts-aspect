@@ -1,7 +1,9 @@
-import { getTsAspectProp } from './TsAspectProperty';
+import { getTsAspectProp } from '@functions/ts-aspect-property';
 
-export function resetAllAspects(target: any, methodName: string): void {
+
+export const resetAllAspects = (target: any, methodName: string): void => {
     const tsAspectProp = getTsAspectProp(target);
+
     if (tsAspectProp && tsAspectProp[methodName]) {
         tsAspectProp[methodName].adviceAspectMap.clear();
     }

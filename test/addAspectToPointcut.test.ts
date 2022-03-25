@@ -1,9 +1,10 @@
 import { mock } from 'jest-mock-extended';
 
-import { Advice } from '../src/advice.enum';
-import { Aspect } from '../src/aspect.interface';
-import { addAspectToPointcut } from '../src/addAspectToPointcut';
 import { CalculatorCls } from './samples/CalculatorCls.sample';
+import { Advice } from './../src/enum/advice.enum';
+import { Aspect } from './../src/interfaces/aspect.interface';
+import { addAspectToPointcut } from './../src/add/add-aspect-to-pointcut';
+
 
 describe('addAspectToPointcut', () => {
     let calculator: CalculatorCls;

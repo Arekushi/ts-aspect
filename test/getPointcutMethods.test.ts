@@ -1,6 +1,7 @@
-import { getPointcutMethods } from '../src/getPointcutMethods';
+import { getPointcutMethods } from './../src/functions/get-pointcut-methods';
 import { CalculatorCls } from './samples/CalculatorCls.sample';
 import { CalculatorObj } from './samples/CalculatorObj.sample';
+
 
 describe('getPointcutMethods', () => {
     beforeEach(() => {

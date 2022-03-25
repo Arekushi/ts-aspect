@@ -1,8 +1,8 @@
+import { Aspect, AspectContext } from './../../src/interfaces/aspect.interface';
+import { Advice } from './../../src/enum/advice.enum';
+import { UseAspect } from './../../src/decorator/use-aspect';
 import { mock } from 'jest-mock-extended';
 
-import { Advice } from '../../src/advice.enum';
-import { Aspect, AspectContext } from '../../src/aspect.interface';
-import { UseAspect } from '../../src/decorator/UseAspect';
 
 const beforeAspect = mock<Aspect>();
 const afterAspect = mock<Aspect>();
