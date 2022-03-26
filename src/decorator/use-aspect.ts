@@ -7,7 +7,7 @@ import { proxyFunc } from '@proxy-func/proxy-func';
 export const UseAspect = (
     advice: Advice,
     aspect: Aspect | (new () => Aspect),
-    params: any
+    params?: any
 ): MethodDecorator => {
     return (target, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
         let tsAspectProp = getTsAspectProp(target);

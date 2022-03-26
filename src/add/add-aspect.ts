@@ -11,7 +11,7 @@ export const addAspect = (
     methodName: string,
     advice: Advice,
     aspect: Aspect,
-    ...params: any[]
+    params?: any
 ): void => {
     let tsAspectProp = getTsAspectProp(target);
 
