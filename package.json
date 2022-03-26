@@ -2,8 +2,8 @@
   "name": "@arekushii/ts-aspect",
   "description": "Simplistic library for Aspect Oriented Programming in TypeScript",
   "version": "3.0.2",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "main": "build/src/index.js",
+  "types": "build/src/index.d.ts",
   "files": [
     "build/*"
   ],
