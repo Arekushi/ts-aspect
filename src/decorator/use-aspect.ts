@@ -1,3 +1,5 @@
+import { types } from 'util';
+import { asyncProxyFunc } from '@proxy-func/async-proxy-func';
 import { Advice } from '@enum/advice.enum';
 import { Aspect } from '@interfaces/aspect.interface';
 import { getTsAspectProp, setTsAspectProp } from '@functions/ts-aspect-property';
@@ -31,13 +33,23 @@ export const UseAspect = (
                 const tsAspectProp = getTsAspectProp(target);
 
                 if (tsAspectProp) {
-                    return proxyFunc(
-                        this,
-                        propertyKeyString,
-                        tsAspectProp[propertyKeyString],
-                        params,
-                        ...args,
-                    );
+                    if (types.isAsyncFunction(originalMethod)) {
+                        return asyncProxyFunc(
+                            this,
+                            propertyKeyString,
+                            tsAspectProp[propertyKeyString],
+                            params,
+                            ...args,
+                        );
+                    } else {
+                        return proxyFunc(
+                            this,
+                            propertyKeyString,
+                            tsAspectProp[propertyKeyString],
+                            params,
+                            ...args,
+                        );
+                    }
                 }
 
                 return originalMethod(...args);

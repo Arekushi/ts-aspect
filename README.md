@@ -1,10 +1,10 @@
-# ts-aspect
+# @arekushii/ts-aspect
 
-A simplistic library for **A**spect **O**riented **P**rogramming (AOP) in TypeScript. Aspects can be injected on pointcuts via regular expressions for a class or object. 
+This is a fork of a original repo - https://github.com/engelmi/ts-aspect
 
-One application of AOP is the encapsulation of cross-cutting concerns, like logging, and keep the original business logic clean. Although a powerful tool, it should be used with care as it hides logic and complexity. 
+A simplistic library for **A**spect **O**riented **P**rogramming (AOP) in TypeScript. Aspects can be injected on pointcuts via regular expressions for a class or object.
 
-![Build Status](https://travis-ci.com/engelmi/ts-aspect.svg?branch=main)
+One application of AOP is the encapsulation of cross-cutting concerns, like logging, and keep the original business logic clean. Although a powerful tool, it should be used with care as it hides logic and complexity.
 
 
 ## Installation
@@ -57,7 +57,7 @@ function UseAspect(advice: Advice, aspect: Aspect | (new () => Aspect)): MethodD
 ## Example
 Assume the following aspect class which simply logs the current aspect context passed to it to the console: 
 ```javascript
-class LogAspect implements Aspect{
+class LogAspect implements Aspect {
     function execute(ctx: AspectContext): void {
         console.log(ctx);
     }
@@ -126,7 +126,7 @@ In this case, the `divide` function throws the division by zero exception. Due t
 **Note:** 
 Because the aspect does not rethrow the exception implicitly, the handling will stop here. Rethrowing the error in the aspect is necessary if it is supposed to be handled elsewhere. 
 
-### UseAspect
+## UseAspect
 In addition, aspects can be added to a all class instances in a declarative manner by using the decorator `UseAspect`. Based on the Calculator example above, lets add another LogAspect to the `add` method so that the result gets logged to the console as well: 
 ```javascript
 class Calculator {
@@ -140,4 +140,33 @@ class Calculator {
 const calculator = new Calculator();
 calculator.add(1300, 37);
 ```
-The aspect passed to the decorator can be either a class which provides a constructor with no arguments or an instance of an aspect. 
+
+The aspect passed to the decorator can be either a class which provides a constructor with no arguments or an instance of an aspect.
+
+
+### Parameters
+You can pass additional parameters when using an aspect.
+```javascript
+class ServiceExample {
+    @UseAspect(Advice.AfterReturn, CheckNullReturnAspect, new MyException())
+    public getSomething() {
+        return null;
+    }
+    // ...
+}
+```
+
+So in Aspect you can recover this parameter.
+
+```javascript
+class CheckNullReturnAspect implements Aspect {
+    execute(ctx: AspectContext): any {
+        const exception = ctx.params;
+        const value = ctx.returnValue;
+
+        if (!value) {
+            throw exception;
+        }
+    }
+} 
+```

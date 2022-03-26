@@ -1,8 +1,8 @@
+import { postExecution } from '@execution/post-execution';
+import { preExecution } from '@execution/pre-execution';
 import { Advice } from '@enum/advice.enum';
 import { AspectContext } from '@interfaces/aspect.interface';
 import { MethodContainer } from '@aspect-types/method-container.type';
-import { asyncPreExecution } from '@execution/async-pre-execution';
-import { asyncPostExecution } from '@execution/async-post-execution';
 
 
 export async function asyncProxyFunc(
@@ -24,7 +24,7 @@ export async function asyncProxyFunc(
         error: null,
     };
 
-    modifiedArgs = await asyncPreExecution(aspectCtx, adviceAspectMap);
+    modifiedArgs = preExecution(aspectCtx, adviceAspectMap);
 
     try {
         aspectCtx.returnValue = await originalMethod.apply(target, modifiedArgs ?? args);
@@ -45,7 +45,7 @@ export async function asyncProxyFunc(
         }
     }
 
-    await asyncPostExecution(aspectCtx, adviceAspectMap);
+    postExecution(aspectCtx, adviceAspectMap);
 
     return aspectCtx.returnValue;
 }

@@ -13,5 +13,5 @@ export {
     addAspect,
     addAspectToPointcut,
     resetAllAspects,
-    UseAspect,
+    UseAspect
 };
