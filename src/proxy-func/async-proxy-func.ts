@@ -9,7 +9,7 @@ export async function asyncProxyFunc(
     target: any,
     methodName: string,
     methodContainer: MethodContainer,
-    params: any[],
+    params: any,
     ...args: any
 ): Promise<any> {
     let modifiedArgs: any = undefined;

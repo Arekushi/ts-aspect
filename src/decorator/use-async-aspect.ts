@@ -7,7 +7,7 @@ import { asyncProxyFunc } from '@proxy-func/async-proxy-func';
 export const UseAsyncAspect = async (
     advice: Advice,
     aspect: Aspect | (new () => Aspect),
-    ...params: any[]
+    params: any
 ): Promise<MethodDecorator> => {
     return (target, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
         let tsAspectProp = getTsAspectProp(target);
@@ -27,7 +27,7 @@ export const UseAsyncAspect = async (
                 adviceAspectMap: new Map<Advice, Aspect[]>(),
             };
 
-            descriptor.value = async (...args: any): Promise<any> => {
+            descriptor.value = async function (...args: any): Promise<any> {
                 const tsAspectProp = getTsAspectProp(target);
 
                 if (tsAspectProp) {

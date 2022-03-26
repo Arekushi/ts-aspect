@@ -9,7 +9,7 @@ export function proxyFunc(
     target: any,
     methodName: string,
     methodContainer: MethodContainer,
-    params: any[],
+    params: any,
     ...args: any
 ): any {
     let modifiedArgs: any = undefined;

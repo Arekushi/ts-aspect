@@ -7,15 +7,19 @@ export const asyncPreExecution = async (
     aspectCtx: AspectContext,
     adviceAspectMap: AdviceAspectMap,
 ): Promise<any> => {
+    let modifiedArgs: any = undefined;
+
     if (adviceAspectMap.has(Advice.Before)) {
         adviceAspectMap.get(Advice.Before)?.forEach(async (aspect) => {
-            return await aspect.execute(aspectCtx);
+            modifiedArgs = await aspect.execute(aspectCtx);
         });
     }
 
     if (adviceAspectMap.has(Advice.Around)) {
         adviceAspectMap.get(Advice.Around)?.forEach(async (aspect) => {
-            return await aspect.execute(aspectCtx);
+            modifiedArgs = await aspect.execute(aspectCtx);
         });
     }
+
+    return modifiedArgs;
 };

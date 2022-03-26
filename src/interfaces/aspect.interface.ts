@@ -8,5 +8,5 @@ export interface AspectContext {
     functionParams: any[];
     returnValue: any;
     error: any;
-    params?: any[];
+    params?: any;
 };
