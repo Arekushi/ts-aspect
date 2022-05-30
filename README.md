@@ -1,6 +1,6 @@
 # @arekushii/ts-aspect
 
-This is a fork of a original repo - https://github.com/engelmi/ts-aspect
+> **This is a fork of a original repo - https://github.com/engelmi/ts-aspect**
 
 A simplistic library for **A**spect **O**riented **P**rogramming (AOP) in TypeScript. Aspects can be injected on pointcuts via regular expressions for a class or object.
 
@@ -8,23 +8,20 @@ One application of AOP is the encapsulation of cross-cutting concerns, like logg
 
 
 ## Installation
-To get started, install `ts-aspect` with npm.
+To get started, install `@arekushii/ts-aspect` with npm.
 ```
-npm install ts-aspect
+npm i @arekushii/ts-aspect
 ```
-
-## Using with NestJS
-`ts-aspect` can also be used together with `NestJS`. An example can be seen [here](https://github.com/engelmi/ts-aspect-nestjs-example). 
 
 
 ## Usage
 An aspect can be injected to the `target` class instance or object via
 ```javascript
-function addAspect(target: any, methodName: string, advice: Advice, aspect: Aspect): void
+function addAspect(target: any, methodName: string, advice: Advice, aspect: Aspect, params: any): void
 ```
 or
 ```javascript
-function addAspectToPointcut(target: any, pointcut: string, advice: Advice, aspect: Aspect): void
+function addAspectToPointcut(target: any, pointcut: string, advice: Advice, aspect: Aspect, params: any): void
 ```
 The `aspect` parameter is the actual behavior that extends the `target` code. When the `aspect` is about to be executed is defined by the `advice` parameter. Currently, the following advices are available:
 - Before
@@ -39,10 +36,12 @@ Finally, the `pointcut` parameter describes the where - so basically for which f
 
 If an `aspect` is called, it creates a new context. The context itself is defined as
 ```javascript
-export type AspectContext = {
+export interface AspectContext = {
     target: any;            // injected object
     methodName: string;     // the name of the injected function
     functionParams: any[];  // parameters passed to the call of the injected function
+    params?: any            // parameters passed in using the aspect
+    advice: Advice          // advice used in aspect
     returnValue: any;       // only set for the AfterReturn-Aspect
     error: any;             // only set for the TryCatch-Aspect when an error is thrown
 };
@@ -51,7 +50,11 @@ Aspects await the execution of asynchronous functions - and are asynchronous the
 
 Also, `ts-aspect` provides a method decorator to attach an aspect to a all instances of a class in a declarative manner:
 ```javascript
-function UseAspect(advice: Advice, aspect: Aspect | (new () => Aspect)): MethodDecorator
+function UseAspect(
+    advice: Advice,
+    aspect: Aspect | (new () => Aspect),
+    params: any
+): MethodDecorator
 ```
 
 ## Example
@@ -103,7 +106,9 @@ should output
 {
   target: Calculator {},
   methodName: 'add',
+  advice: Advice.Before,
   functionParams: [1, 2],
+  params: null,
   returnValue: null,
   error: null
 }
@@ -144,11 +149,15 @@ calculator.add(1300, 37);
 The aspect passed to the decorator can be either a class which provides a constructor with no arguments or an instance of an aspect.
 
 
-### Parameters
+## Parameters
 You can pass additional parameters when using an aspect.
 ```javascript
 class ServiceExample {
-    @UseAspect(Advice.AfterReturn, CheckNullReturnAspect, new MyException())
+    @UseAspect(
+        Advice.AfterReturn,
+        CheckNullReturnAspect,
+        { exception: new MyException() }
+    )
     public getSomething() {
         return null;
     }
@@ -161,7 +170,7 @@ So in Aspect you can recover this parameter.
 ```javascript
 class CheckNullReturnAspect implements Aspect {
     execute(ctx: AspectContext): any {
-        const exception = ctx.params;
+        const exception = ctx.params.exception;
         const value = ctx.returnValue;
 
         if (!value) {
@@ -170,3 +179,27 @@ class CheckNullReturnAspect implements Aspect {
     }
 } 
 ```
+
+## Aspect with Before Advice
+You can update the value of parameters passed in the injected function.
+
+```javascript
+class ServiceExample {
+    getRequest(route: string) {
+        //...
+    }
+}
+```
+
+In this example we can handle the parameter `(route: string)` and return it with the updated value.
+
+```javascript
+export class RouteProcessingAspect implements Aspect {
+
+    execute(ctx: AspectContext): any {
+        const route: string = ctx.functionParams.shift();
+        return [route.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, ''), ...ctx.functionParams];
+    }
+}
+```
+In the `getRequest` method, the `route` parameter will be handled before the method call, without the need for the `getRequest` method itself to do so.

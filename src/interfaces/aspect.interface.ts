@@ -1,3 +1,6 @@
+import { Advice } from '@enum/advice.enum';
+
+
 export interface Aspect {
     execute(ctx: AspectContext): any;
 }
@@ -8,5 +11,6 @@ export interface AspectContext {
     functionParams: any[];
     returnValue: any;
     error: any;
+    advice: Advice;
     params?: any;
-};
+}

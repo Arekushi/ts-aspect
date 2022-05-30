@@ -7,4 +7,4 @@ export const resetAllAspects = (target: any, methodName: string): void => {
     if (tsAspectProp && tsAspectProp[methodName]) {
         tsAspectProp[methodName].adviceAspectMap.clear();
     }
-}
+};

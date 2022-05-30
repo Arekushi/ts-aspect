@@ -7,7 +7,7 @@ export const preExecution = (
     aspectCtx: AspectContext,
     adviceAspectMap: AdviceAspectMap,
 ): any => {
-    let modifiedArgs: any = undefined;
+    let modifiedArgs;
 
     if (adviceAspectMap.has(Advice.Before)) {
         adviceAspectMap.get(Advice.Before)?.forEach(aspect => {

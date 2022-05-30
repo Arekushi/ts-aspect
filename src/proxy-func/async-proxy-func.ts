@@ -8,23 +8,23 @@ import { MethodContainer } from '@aspect-types/method-container.type';
 export async function asyncProxyFunc(
     target: any,
     methodName: string,
+    advice: Advice,
     methodContainer: MethodContainer,
     params: any,
     ...args: any
 ): Promise<any> {
-    let modifiedArgs: any = undefined;
-
     const { originalMethod, adviceAspectMap } = methodContainer;
     const aspectCtx: AspectContext = {
-        target: target,
-        methodName: methodName,
+        target,
+        methodName,
+        advice,
         functionParams: args,
-        params: params,
+        params,
         returnValue: null,
         error: null,
     };
 
-    modifiedArgs = preExecution(aspectCtx, adviceAspectMap);
+    const modifiedArgs = preExecution(aspectCtx, adviceAspectMap);
 
     try {
         aspectCtx.returnValue = await originalMethod.apply(target, modifiedArgs ?? args);

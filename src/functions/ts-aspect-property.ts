@@ -10,4 +10,4 @@ export const getTsAspectProp = (target: any): TsAspectContainer | undefined => {
 
 export const setTsAspectProp = (target: any, tsAspectProp: TsAspectContainer): boolean => {
     return Reflect.set(target, tsAspectPropName, tsAspectProp);
-}
+};

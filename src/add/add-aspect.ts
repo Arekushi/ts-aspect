@@ -11,7 +11,7 @@ export const addAspect = (
     methodName: string,
     advice: Advice,
     aspect: Aspect,
-    params: any = undefined
+    params: any = null
 ): void => {
     let tsAspectProp = getTsAspectProp(target);
 
@@ -29,13 +29,27 @@ export const addAspect = (
         };
 
         const wrapperFunc = (...args: any): any => {
-            const tsAspectProp = getTsAspectProp(target);
+            const container = getTsAspectProp(target);
 
-            if (tsAspectProp) {
+            if (container) {
                 if (types.isAsyncFunction(originalMethod)) {
-                    return asyncProxyFunc(target, methodName, tsAspectProp[methodName], params, ...args);
+                    return asyncProxyFunc(
+                        target,
+                        methodName,
+                        advice,
+                        container[methodName],
+                        params,
+                        ...args
+                    );
                 } else {
-                    return proxyFunc(target, methodName, tsAspectProp[methodName], params, ...args);
+                    return proxyFunc(
+                        target,
+                        methodName,
+                        advice,
+                        container[methodName],
+                        params,
+                        ...args
+                    );
                 }
             }
 
@@ -52,4 +66,4 @@ export const addAspect = (
     }
 
     adviceAspectMap.get(advice)?.push(aspect);
-}
+};

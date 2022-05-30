@@ -2,14 +2,14 @@ import { types } from 'util';
 import { asyncProxyFunc } from '@proxy-func/async-proxy-func';
 import { Advice } from '@enum/advice.enum';
 import { Aspect } from '@interfaces/aspect.interface';
-import { getTsAspectProp, setTsAspectProp } from '@functions/ts-aspect-property';
 import { proxyFunc } from '@proxy-func/proxy-func';
+import { getTsAspectProp, setTsAspectProp } from '@functions/ts-aspect-property';
 
 
 export const UseAspect = (
     advice: Advice,
     aspect: Aspect | (new () => Aspect),
-    params: any = undefined
+    params: any = null
 ): MethodDecorator => {
     return (target, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
         let tsAspectProp = getTsAspectProp(target);
@@ -29,15 +29,16 @@ export const UseAspect = (
                 adviceAspectMap: new Map<Advice, Aspect[]>(),
             };
 
-            descriptor.value = function (...args: any) {
-                const tsAspectProp = getTsAspectProp(target);
+            descriptor.value = function(...args: any) {
+                const container = getTsAspectProp(target);
 
-                if (tsAspectProp) {
+                if (container) {
                     if (types.isAsyncFunction(originalMethod)) {
                         return asyncProxyFunc(
                             this,
                             propertyKeyString,
-                            tsAspectProp[propertyKeyString],
+                            advice,
+                            container[propertyKeyString],
                             params,
                             ...args,
                         );
@@ -45,7 +46,8 @@ export const UseAspect = (
                         return proxyFunc(
                             this,
                             propertyKeyString,
-                            tsAspectProp[propertyKeyString],
+                            advice,
+                            container[propertyKeyString],
                             params,
                             ...args,
                         );
