@@ -8,23 +8,23 @@ import { MethodContainer } from '@aspect-types/method-container.type';
 export function proxyFunc(
     target: any,
     methodName: string,
-    advice: Advice,
     methodContainer: MethodContainer,
     params: any,
     ...args: any
 ): any {
+    let modifiedArgs: any = undefined;
+
     const { originalMethod, adviceAspectMap } = methodContainer;
     const aspectCtx: AspectContext = {
         target,
         methodName,
-        advice,
         functionParams: args,
         params,
         returnValue: null,
         error: null,
     };
 
-    const modifiedArgs = preExecution(aspectCtx, adviceAspectMap);
+    modifiedArgs = preExecution(aspectCtx, adviceAspectMap);
 
     try {
         aspectCtx.returnValue = originalMethod.apply(target, modifiedArgs ?? args);
@@ -32,6 +32,7 @@ export function proxyFunc(
         if (adviceAspectMap.has(Advice.TryCatch)) {
             adviceAspectMap.get(Advice.TryCatch)?.forEach(aspect => {
                 aspectCtx.error = error;
+                aspectCtx.advice = Advice.TryCatch;
                 aspect.execute(aspectCtx);
             });
         } else {
@@ -40,6 +41,7 @@ export function proxyFunc(
     } finally {
         if (adviceAspectMap.has(Advice.TryFinally)) {
             adviceAspectMap.get(Advice.TryFinally)?.forEach(aspect => {
+                aspectCtx.advice = Advice.TryFinally;
                 aspect.execute(aspectCtx);
             });
         }

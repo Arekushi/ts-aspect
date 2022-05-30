@@ -36,7 +36,6 @@ export const addAspect = (
                     return asyncProxyFunc(
                         target,
                         methodName,
-                        advice,
                         container[methodName],
                         params,
                         ...args
@@ -45,7 +44,6 @@ export const addAspect = (
                     return proxyFunc(
                         target,
                         methodName,
-                        advice,
                         container[methodName],
                         params,
                         ...args

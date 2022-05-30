@@ -8,7 +8,6 @@ import { MethodContainer } from '@aspect-types/method-container.type';
 export async function asyncProxyFunc(
     target: any,
     methodName: string,
-    advice: Advice,
     methodContainer: MethodContainer,
     params: any,
     ...args: any
@@ -17,7 +16,6 @@ export async function asyncProxyFunc(
     const aspectCtx: AspectContext = {
         target,
         methodName,
-        advice,
         functionParams: args,
         params,
         returnValue: null,
@@ -32,6 +30,7 @@ export async function asyncProxyFunc(
         if (adviceAspectMap.has(Advice.TryCatch)) {
             adviceAspectMap.get(Advice.TryCatch)?.forEach(aspect => {
                 aspectCtx.error = error;
+                aspectCtx.advice = Advice.TryCatch;
                 aspect.execute(aspectCtx);
             });
         } else {
@@ -40,6 +39,7 @@ export async function asyncProxyFunc(
     } finally {
         if (adviceAspectMap.has(Advice.TryFinally)) {
             adviceAspectMap.get(Advice.TryFinally)?.forEach(aspect => {
+                aspectCtx.advice = Advice.TryFinally;
                 aspect.execute(aspectCtx);
             });
         }

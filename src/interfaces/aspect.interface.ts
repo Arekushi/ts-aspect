@@ -11,6 +11,6 @@ export interface AspectContext {
     functionParams: any[];
     returnValue: any;
     error: any;
-    advice: Advice;
+    advice?: Advice;
     params?: any;
 }

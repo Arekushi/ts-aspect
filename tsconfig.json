@@ -13,11 +13,6 @@
       "@proxy-func/*": ["./src/proxy-func/*"],
       "@aspect-types/*": ["./src/types/*"]
     },
-    "plugins": [
-      {
-        "name": "typescript-tslint-plugin"
-      }
-    ],
     "target": "ES2017",
     "module": "CommonJS",
     "allowJs": true,

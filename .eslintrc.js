@@ -189,6 +189,7 @@ module.exports = {
         ],
 
         // Off
+        'no-undef-init': 'off',
         'linebreak-style': 0,
         'prettier/prettier': 0,
         '@typescript-eslint/no-empty-function': 'off',

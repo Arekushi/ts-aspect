@@ -37,7 +37,6 @@ export const UseAspect = (
                         return asyncProxyFunc(
                             this,
                             propertyKeyString,
-                            advice,
                             container[propertyKeyString],
                             params,
                             ...args,
@@ -46,7 +45,6 @@ export const UseAspect = (
                         return proxyFunc(
                             this,
                             propertyKeyString,
-                            advice,
                             container[propertyKeyString],
                             params,
                             ...args,
