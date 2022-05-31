@@ -10,16 +10,18 @@ export const preExecution = (
     let modifiedArgs: any = undefined;
 
     if (adviceAspectMap.has(Advice.Before)) {
-        adviceAspectMap.get(Advice.Before)?.forEach(aspect => {
-            aspectCtx.advice = Advice.Before;
-            modifiedArgs = aspect.execute(aspectCtx);
+        adviceAspectMap.get(Advice.Before)?.forEach(values => {
+            aspectCtx.advice = values.advice;
+            aspectCtx.params = values.params;
+            modifiedArgs = values.aspect.execute(aspectCtx);
         });
     }
 
     if (adviceAspectMap.has(Advice.Around)) {
-        adviceAspectMap.get(Advice.Around)?.forEach(aspect => {
-            aspectCtx.advice = Advice.Around;
-            modifiedArgs = aspect.execute(aspectCtx);
+        adviceAspectMap.get(Advice.Around)?.forEach(values => {
+            aspectCtx.advice = values.advice;
+            aspectCtx.params = values.params;
+            modifiedArgs = values.aspect.execute(aspectCtx);
         });
     }
 

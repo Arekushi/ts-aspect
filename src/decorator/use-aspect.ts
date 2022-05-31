@@ -4,12 +4,13 @@ import { Advice } from '@enum/advice.enum';
 import { Aspect } from '@interfaces/aspect.interface';
 import { proxyFunc } from '@proxy-func/proxy-func';
 import { getTsAspectProp, setTsAspectProp } from '@functions/ts-aspect-property';
+import { AspectValues } from '@aspect-types/aspect-values.type';
 
 
 export const UseAspect = (
     advice: Advice,
     aspect: Aspect | (new () => Aspect),
-    params: any = null
+    params?: any
 ): MethodDecorator => {
     return (target, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
         let tsAspectProp = getTsAspectProp(target);
@@ -26,7 +27,7 @@ export const UseAspect = (
 
             tsAspectProp[propertyKeyString] = {
                 originalMethod,
-                adviceAspectMap: new Map<Advice, Aspect[]>(),
+                adviceAspectMap: new Map<Advice, AspectValues[]>(),
             };
 
             descriptor.value = function(...args: any) {
@@ -62,7 +63,12 @@ export const UseAspect = (
             adviceAspectMap.set(advice, []);
         }
 
-        const aspectObj = typeof aspect === 'function' ? new aspect() : aspect;
-        adviceAspectMap.get(advice)?.push(aspectObj);
+        const aspectValues: AspectValues = {
+            aspect: typeof aspect === 'function' ? new aspect() : aspect,
+            advice,
+            params
+        };
+
+        adviceAspectMap.get(advice)?.push(aspectValues);
     };
 };

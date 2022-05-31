@@ -4,6 +4,7 @@ import { Aspect } from '@interfaces/aspect.interface';
 import { setTsAspectProp, getTsAspectProp } from '@functions/ts-aspect-property';
 import { asyncProxyFunc } from '@proxy-func/async-proxy-func';
 import { proxyFunc } from '@proxy-func/proxy-func';
+import { AspectValues } from '@aspect-types/aspect-values.type';
 
 
 export const addAspect = (
@@ -25,7 +26,7 @@ export const addAspect = (
 
         tsAspectProp[methodName] = {
             originalMethod,
-            adviceAspectMap: new Map<Advice, Aspect[]>(),
+            adviceAspectMap: new Map<Advice, AspectValues[]>(),
         };
 
         const wrapperFunc = (...args: any): any => {
@@ -37,7 +38,6 @@ export const addAspect = (
                         target,
                         methodName,
                         container[methodName],
-                        params,
                         ...args
                     );
                 } else {
@@ -45,7 +45,6 @@ export const addAspect = (
                         target,
                         methodName,
                         container[methodName],
-                        params,
                         ...args
                     );
                 }
@@ -63,5 +62,9 @@ export const addAspect = (
         adviceAspectMap.set(advice, []);
     }
 
-    adviceAspectMap.get(advice)?.push(aspect);
+    adviceAspectMap.get(advice)?.push({
+        aspect,
+        advice,
+        params
+    });
 };

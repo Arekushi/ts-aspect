@@ -8,23 +8,26 @@ export const postExecution = (
     adviceAspectMap: AdviceAspectMap,
 ): void => {
     if (adviceAspectMap.has(Advice.Around)) {
-        adviceAspectMap.get(Advice.Around)?.forEach(aspect => {
-            aspectCtx.advice = Advice.Around;
-            aspect.execute(aspectCtx);
+        adviceAspectMap.get(Advice.Around)?.forEach(values => {
+            aspectCtx.advice = values.advice;
+            aspectCtx.params = values.params;
+            values.aspect.execute(aspectCtx);
         });
     }
 
     if (adviceAspectMap.has(Advice.After)) {
-        adviceAspectMap.get(Advice.After)?.forEach(aspect => {
-            aspectCtx.advice = Advice.After;
-            aspect.execute(aspectCtx);
+        adviceAspectMap.get(Advice.After)?.forEach(values => {
+            aspectCtx.advice = values.advice;
+            aspectCtx.params = values.params;
+            values.aspect.execute(aspectCtx);
         });
     }
 
     if (adviceAspectMap.has(Advice.AfterReturn)) {
-        adviceAspectMap.get(Advice.AfterReturn)?.forEach(aspect => {
-            aspectCtx.advice = Advice.AfterReturn;
-            aspectCtx.returnValue = aspect.execute(aspectCtx);
+        adviceAspectMap.get(Advice.AfterReturn)?.forEach(values => {
+            aspectCtx.advice = values.advice;
+            aspectCtx.params = values.params;
+            aspectCtx.returnValue = values.aspect.execute(aspectCtx);
         });
     }
 };

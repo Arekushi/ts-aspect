@@ -9,38 +9,40 @@ export async function asyncProxyFunc(
     target: any,
     methodName: string,
     methodContainer: MethodContainer,
-    params: any,
     ...args: any
 ): Promise<any> {
+    let modifiedArgs: any = undefined;
+
     const { originalMethod, adviceAspectMap } = methodContainer;
     const aspectCtx: AspectContext = {
         target,
         methodName,
         functionParams: args,
-        params,
         returnValue: null,
         error: null,
     };
 
-    const modifiedArgs = preExecution(aspectCtx, adviceAspectMap);
+    modifiedArgs = preExecution(aspectCtx, adviceAspectMap);
 
     try {
         aspectCtx.returnValue = await originalMethod.apply(target, modifiedArgs ?? args);
     } catch (error) {
         if (adviceAspectMap.has(Advice.TryCatch)) {
-            adviceAspectMap.get(Advice.TryCatch)?.forEach(aspect => {
+            adviceAspectMap.get(Advice.TryCatch)?.forEach(values => {
                 aspectCtx.error = error;
-                aspectCtx.advice = Advice.TryCatch;
-                aspect.execute(aspectCtx);
+                aspectCtx.advice = values.advice;
+                aspectCtx.params = values.params;
+                values.aspect.execute(aspectCtx);
             });
         } else {
             throw error;
         }
     } finally {
         if (adviceAspectMap.has(Advice.TryFinally)) {
-            adviceAspectMap.get(Advice.TryFinally)?.forEach(aspect => {
-                aspectCtx.advice = Advice.TryFinally;
-                aspect.execute(aspectCtx);
+            adviceAspectMap.get(Advice.TryFinally)?.forEach(values => {
+                aspectCtx.advice = values.advice;
+                aspectCtx.params = values.params;
+                values.aspect.execute(aspectCtx);
             });
         }
     }

@@ -9,7 +9,6 @@ export function proxyFunc(
     target: any,
     methodName: string,
     methodContainer: MethodContainer,
-    params: any,
     ...args: any
 ): any {
     let modifiedArgs: any = undefined;
@@ -19,7 +18,6 @@ export function proxyFunc(
         target,
         methodName,
         functionParams: args,
-        params,
         returnValue: null,
         error: null,
     };
@@ -30,19 +28,21 @@ export function proxyFunc(
         aspectCtx.returnValue = originalMethod.apply(target, modifiedArgs ?? args);
     } catch (error) {
         if (adviceAspectMap.has(Advice.TryCatch)) {
-            adviceAspectMap.get(Advice.TryCatch)?.forEach(aspect => {
+            adviceAspectMap.get(Advice.TryCatch)?.forEach(values => {
                 aspectCtx.error = error;
-                aspectCtx.advice = Advice.TryCatch;
-                aspect.execute(aspectCtx);
+                aspectCtx.advice = values.advice;
+                aspectCtx.params = values.params;
+                values.aspect.execute(aspectCtx);
             });
         } else {
             throw error;
         }
     } finally {
         if (adviceAspectMap.has(Advice.TryFinally)) {
-            adviceAspectMap.get(Advice.TryFinally)?.forEach(aspect => {
-                aspectCtx.advice = Advice.TryFinally;
-                aspect.execute(aspectCtx);
+            adviceAspectMap.get(Advice.TryFinally)?.forEach(values => {
+                aspectCtx.advice = values.advice;
+                aspectCtx.params = values.params;
+                values.aspect.execute(aspectCtx);
             });
         }
     }
