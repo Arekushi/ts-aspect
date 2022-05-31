@@ -39,7 +39,6 @@ export const UseAspect = (
                             this,
                             propertyKeyString,
                             container[propertyKeyString],
-                            params,
                             ...args,
                         );
                     } else {
@@ -47,7 +46,6 @@ export const UseAspect = (
                             this,
                             propertyKeyString,
                             container[propertyKeyString],
-                            params,
                             ...args,
                         );
                     }
