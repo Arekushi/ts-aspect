@@ -35,11 +35,10 @@
     "DOM"
   ],
   "include": [
-    "src",
-    "test"
+    "./src",
+    "./test"
   ],
   "exclude": [
-    "node_modules",
-    "test"
+    "node_modules"
   ]
 }
