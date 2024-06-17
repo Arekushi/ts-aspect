@@ -20,7 +20,10 @@ module.exports = {
         '<rootDir>/dist/'
     ],
     coverageDirectory: 'coverage',
-    collectCoverageFrom: ['src/**/*.ts', '!src/index.ts'],
+    collectCoverageFrom: [
+        'src/**/*.ts',
+        '!src/index.ts'
+    ],
     coverageThreshold: {
         global: {
             branches: 80,
