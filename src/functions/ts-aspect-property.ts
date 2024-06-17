@@ -1,8 +1,6 @@
 import { TsAspectContainer } from '@aspect-types/aspect-container.type';
 
-
 const tsAspectPropName = 'ts_aspect_obj';
-
 
 export const getTsAspectProp = (target: any): TsAspectContainer | undefined => {
     return Reflect.get(target, tsAspectPropName);

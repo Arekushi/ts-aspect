@@ -9,7 +9,7 @@ export function addAspectToPointcut(
     pointcut: string,
     advice: Advice,
     aspect: Aspect,
-    params: any = null
+    params?: any
 ): void {
     const methods = getPointcutMethods(target, pointcut);
 

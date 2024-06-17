@@ -9,7 +9,7 @@ export function proxyFunc(
     target: any,
     methodName: string,
     methodContainer: MethodContainer,
-    ...args: any
+    functionParams: any
 ): any {
     let modifiedArgs: any = undefined;
 
@@ -17,7 +17,7 @@ export function proxyFunc(
     const aspectCtx: AspectContext = {
         target,
         methodName,
-        functionParams: args,
+        functionParams,
         returnValue: null,
         error: null,
     };
@@ -25,7 +25,10 @@ export function proxyFunc(
     modifiedArgs = preExecution(aspectCtx, adviceAspectMap);
 
     try {
-        aspectCtx.returnValue = originalMethod.apply(target, modifiedArgs ?? args);
+        aspectCtx.returnValue = originalMethod.apply(
+            target,
+            modifiedArgs ?? Object.values(functionParams)
+        );
     } catch (error) {
         if (adviceAspectMap.has(Advice.TryCatch)) {
             adviceAspectMap.get(Advice.TryCatch)?.forEach(values => {

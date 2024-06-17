@@ -9,7 +9,7 @@ export async function asyncProxyFunc(
     target: any,
     methodName: string,
     methodContainer: MethodContainer,
-    ...args: any
+    functionParams: any
 ): Promise<any> {
     let modifiedArgs: any = undefined;
 
@@ -17,7 +17,7 @@ export async function asyncProxyFunc(
     const aspectCtx: AspectContext = {
         target,
         methodName,
-        functionParams: args,
+        functionParams,
         returnValue: null,
         error: null,
     };
@@ -25,7 +25,10 @@ export async function asyncProxyFunc(
     modifiedArgs = await asyncPreExecution(aspectCtx, adviceAspectMap);
 
     try {
-        aspectCtx.returnValue = await originalMethod.apply(target, modifiedArgs ?? args);
+        aspectCtx.returnValue = await originalMethod.apply(
+            target,
+            modifiedArgs ?? Object.values(functionParams)
+        );
     } catch (error) {
         if (adviceAspectMap.has(Advice.TryCatch)) {
             adviceAspectMap.get(Advice.TryCatch)?.forEach(values => {

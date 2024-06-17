@@ -8,7 +8,7 @@ export interface Aspect {
 export interface AspectContext {
     target: any;
     methodName: string;
-    functionParams: any[];
+    functionParams: any;
     returnValue: any;
     error: any;
     advice?: Advice;

@@ -5,14 +5,18 @@ import { Aspect } from '@interfaces/aspect.interface';
 import { proxyFunc } from '@proxy-func/proxy-func';
 import { getTsAspectProp, setTsAspectProp } from '@functions/ts-aspect-property';
 import { AspectValues } from '@aspect-types/aspect-values.type';
-
+import { convertToObj, getParameterNames } from '@functions/method-params';
 
 export const UseAspect = (
     advice: Advice,
     aspect: Aspect | (new () => Aspect),
-    params?: any
+    params?: any,
 ): MethodDecorator => {
-    return (target, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
+    return (
+        target,
+        propertyKey: string | symbol,
+        descriptor: PropertyDescriptor
+    ) => {
         let tsAspectProp = getTsAspectProp(target);
 
         if (!tsAspectProp) {
@@ -24,6 +28,7 @@ export const UseAspect = (
 
         if (!tsAspectProp[propertyKeyString]) {
             const originalMethod = descriptor.value;
+            const parameterNames = getParameterNames(originalMethod);
 
             tsAspectProp[propertyKeyString] = {
                 originalMethod,
@@ -34,19 +39,21 @@ export const UseAspect = (
                 const container = getTsAspectProp(target);
 
                 if (container) {
+                    const functionParams = convertToObj(parameterNames, args);
+
                     if (types.isAsyncFunction(originalMethod)) {
                         return asyncProxyFunc(
                             this,
                             propertyKeyString,
                             container[propertyKeyString],
-                            ...args,
+                            functionParams
                         );
                     } else {
                         return proxyFunc(
                             this,
                             propertyKeyString,
                             container[propertyKeyString],
-                            ...args,
+                            functionParams
                         );
                     }
                 }
@@ -64,7 +71,7 @@ export const UseAspect = (
         const aspectValues: AspectValues = {
             aspect: typeof aspect === 'function' ? new aspect() : aspect,
             advice,
-            params
+            params,
         };
 
         adviceAspectMap.get(advice)?.push(aspectValues);
