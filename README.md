@@ -57,7 +57,7 @@ export enum Advice {
     // executed after the method throws an exception
     TryCatch,
 
-    // executed in the Finally code block of a TryCatch
+    // executed in the Finally code block
     TryFinally,
 }
 ```
