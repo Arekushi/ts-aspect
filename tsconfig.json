@@ -1,44 +1,44 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "rootDir": ".",
-    "outDir": "./build",
-    "paths": {
-      "@add/*": ["./src/add/*"],
-      "@decorator/*": ["./src/decorator/*"],
-      "@enum/*": ["./src/enum/*"],
-      "@execution/*": ["./src/execution/*"],
-      "@functions/*": ["./src/functions/*"],
-      "@interfaces/*": ["./src/interfaces/*"],
-      "@proxy-func/*": ["./src/proxy-func/*"],
-      "@aspect-types/*": ["./src/types/*"]
+    "compilerOptions": {
+        "baseUrl": ".",
+        "rootDir": ".",
+        "outDir": "./build",
+        "paths": {
+            "@add/*": ["./src/add/*"],
+            "@decorator/*": ["./src/decorator/*"],
+            "@enum/*": ["./src/enum/*"],
+            "@execution/*": ["./src/execution/*"],
+            "@functions/*": ["./src/functions/*"],
+            "@interfaces/*": ["./src/interfaces/*"],
+            "@proxy-func/*": ["./src/proxy-func/*"],
+            "@aspect-types/*": ["./src/types/*"]
+        },
+        "target": "ES2017",
+        "module": "CommonJS",
+        "allowJs": true,
+        "declaration": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "typeRoots": [
+            "./node_modules/@types",
+            "./src/@types"
+        ],
     },
-    "target": "ES2017",
-    "module": "CommonJS",
-    "allowJs": true,
-    "declaration": true,
-    "strict": true,
-    "noImplicitAny": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./src/@types"
+    "lib": [
+        "ESNext",
+        "ES6",
+        "DOM"
     ],
-  },
-  "lib": [
-    "ESNext",
-    "ES6",
-    "DOM"
-  ],
-  "include": [
-    "./src",
-    "./test"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+    "include": [
+        "./src",
+        "./test"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
 }
