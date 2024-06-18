@@ -34,6 +34,14 @@ class SampleClass {
     ): void { }
 
     @UseAspect(Advice.Before, beforeAspect)
+    public argsWithDefaultValue(
+        b: number,
+        a = 10
+    ): number {
+        return 0;
+    }
+
+    @UseAspect(Advice.Before, beforeAspect)
     @UseAspect(Advice.After, afterAspect)
     public throwError(): void {
         throw new Error('this is expected!');
@@ -56,7 +64,7 @@ describe('UseAspect Decorator', () => {
     it('should execute the aspect annoted', () => {
         sample.getSampleId();
 
-        const expectedCtx = {
+        const expectedCtx: AspectContext = {
             target: sample,
             methodName: 'getSampleId',
             functionParams: {},
@@ -70,6 +78,25 @@ describe('UseAspect Decorator', () => {
         );
     });
 
+    it('should correctly receive the parameter in the aspect context', () => {
+        sample.argsWithDefaultValue(5);
+
+        const expectedCtx: AspectContext = {
+            target: sample,
+            methodName: 'argsWithDefaultValue',
+            functionParams: {
+                b: { index: 0, value: 5 },
+                a: { index: 1, value: 10 }
+            },
+            returnValue: 0,
+            error: null
+        };
+
+        expect(beforeAspect.execute).toHaveBeenCalledWith(
+            expect.objectContaining(expectedCtx)
+        )
+    });
+
     it('should have correctly context object', () => {
         sample.multipleArgs(1, 2, 3);
 
@@ -77,7 +104,9 @@ describe('UseAspect Decorator', () => {
             target: sample,
             methodName: 'multipleArgs',
             functionParams: {
-                a: 1, b: 2, c: 3
+                a: { index: 0, value: 1 },
+                b: { index: 1, value: 2 },
+                c: { index: 2, value: 3 },
             },
             returnValue: undefined,
             error: null,

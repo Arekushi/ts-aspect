@@ -62,10 +62,13 @@ describe('Add Aspect', () => {
             addAspect(calculator, 'add', Advice.After, aspect, 'b');
             calculator.add(1, 2);
 
-            const expectedCtx = {
+            const expectedCtx: AspectContext = {
                 target: calculator,
                 methodName: 'add',
-                functionParams: { a: 1, b: 2 },
+                functionParams: {
+                    a: { index: 0, value: 1 },
+                    b: { index: 1, value: 2 },
+                },
                 returnValue: 3,
                 error: null,
             };
@@ -86,7 +89,10 @@ describe('Add Aspect', () => {
         const expectedCtx: AspectContext = {
             target: calculator,
             methodName: 'divide',
-            functionParams: { a: 1, b: 0 },
+            functionParams: {
+                a: { index: 0, value: 1 },
+                b: { index: 1, value: 0 }
+            },
             returnValue: null,
             error: new Error('Division by zero!'),
         };
@@ -107,7 +113,10 @@ describe('Add Aspect', () => {
         const expectedCtx: AspectContext = {
             target: calculator,
             methodName: 'add',
-            functionParams: { a: 1, b: 2 },
+            functionParams: {
+                a: { index: 0, value: 1 },
+                b: { index: 1, value: 2}
+            },
             returnValue: 3,
             error: null,
         };

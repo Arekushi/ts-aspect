@@ -3,6 +3,7 @@ import { asyncPreExecution } from '@execution/async-pre-execution';
 import { Advice } from '@enum/advice.enum';
 import { AspectContext } from '@interfaces/aspect.interface';
 import { MethodContainer } from '@aspect-types/method-container.type';
+import { convertToArray } from '@functions/method-params';
 
 
 export async function asyncProxyFunc(
@@ -27,7 +28,7 @@ export async function asyncProxyFunc(
     try {
         aspectCtx.returnValue = await originalMethod.apply(
             target,
-            modifiedArgs ?? Object.values(functionParams)
+            modifiedArgs ?? convertToArray(functionParams)
         );
     } catch (error) {
         if (adviceAspectMap.has(Advice.TryCatch)) {

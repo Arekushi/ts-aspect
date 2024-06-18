@@ -5,7 +5,7 @@ import { Aspect } from '@interfaces/aspect.interface';
 import { proxyFunc } from '@proxy-func/proxy-func';
 import { getTsAspectProp, setTsAspectProp } from '@functions/ts-aspect-property';
 import { AspectValues } from '@aspect-types/aspect-values.type';
-import { convertToObj, getParameterNames } from '@functions/method-params';
+import { extractParameters, mergeWithArgs } from '@functions/method-params';
 
 export const UseAspect = (
     advice: Advice,
@@ -28,7 +28,7 @@ export const UseAspect = (
 
         if (!tsAspectProp[propertyKeyString]) {
             const originalMethod = descriptor.value;
-            const parameterNames = getParameterNames(originalMethod);
+            const parametersDefault = extractParameters(originalMethod);
 
             tsAspectProp[propertyKeyString] = {
                 originalMethod,
@@ -39,7 +39,7 @@ export const UseAspect = (
                 const container = getTsAspectProp(target);
 
                 if (container) {
-                    const functionParams = convertToObj(parameterNames, args);
+                    const functionParams = mergeWithArgs(parametersDefault, args);
 
                     if (types.isAsyncFunction(originalMethod)) {
                         return asyncProxyFunc(
@@ -53,7 +53,8 @@ export const UseAspect = (
                             this,
                             propertyKeyString,
                             container[propertyKeyString],
-                            functionParams
+                            functionParams,
+                            ...args
                         );
                     }
                 }

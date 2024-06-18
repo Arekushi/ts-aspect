@@ -1,4 +1,5 @@
 import { Advice } from '@enum/advice.enum';
+import { IndexedKeyValuePair } from '@interfaces/key-value.interface';
 
 
 export interface Aspect {
@@ -8,7 +9,7 @@ export interface Aspect {
 export interface AspectContext {
     target: any;
     methodName: string;
-    functionParams: any;
+    functionParams: IndexedKeyValuePair;
     returnValue: any;
     error: any;
     advice?: Advice;

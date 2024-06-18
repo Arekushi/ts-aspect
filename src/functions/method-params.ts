@@ -1,18 +1,46 @@
-export const getParameterNames = (method: any): string[] => {
-    const parameterRegex = /\(([^)]*)\)/;
-    const matchResult = parameterRegex.exec(method.toString());
+// export const getParameterNames = (method: any): string[] => {
+import { IndexedKeyValuePair } from '@interfaces/key-value.interface';
 
-    if (matchResult) {
-        return matchResult[0]
-            .replace(/[()]/g, '')
-            .split(',')
-            .map((s: string) => s.trim())
-            .filter((s: string) => s !== '');
+export const extractParameters = (method: any): IndexedKeyValuePair => {
+    const methodString = method.toString();
+    const parameterRegex = /\(([^)]*)\)/;
+    const matchResult = parameterRegex.exec(methodString);
+
+    if (!matchResult || !matchResult[1]) {
+        return {};
     }
 
-    return [];
+    const parameters = matchResult[1].split(',');
+    const parameterNamesWithDefaults: IndexedKeyValuePair = {};
+
+    parameters.forEach((parameter, index) => {
+        const [name, defaultValue] = parameter.trim().split('=');
+        parameterNamesWithDefaults[name.trim()] = {
+            index,
+            value: defaultValue ? JSON.parse(defaultValue.trim()) : undefined,
+        };
+    });
+
+    return parameterNamesWithDefaults;
 };
 
-export const convertToObj = (paramsNames: string[], args: any[]): any => {
-    return Object.fromEntries(paramsNames.map((name, index) => [name, args[index]]));
+export const mergeWithArgs = (
+    paramsNames: IndexedKeyValuePair,
+    args: any[],
+): IndexedKeyValuePair => {
+    Object.keys(paramsNames).forEach((key, index) => {
+        if (args[index] !== undefined) {
+            paramsNames[key].value = args[index];
+        }
+    });
+
+    return paramsNames;
+};
+
+export const convertToArray = (
+    parameters: IndexedKeyValuePair,
+): any[] => {
+    return Object.values(parameters)
+        .map(x => x.value)
+        .sort((a, b) => a.index - b.index);
 };

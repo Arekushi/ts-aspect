@@ -5,7 +5,7 @@ import { setTsAspectProp, getTsAspectProp } from '@functions/ts-aspect-property'
 import { asyncProxyFunc } from '@proxy-func/async-proxy-func';
 import { proxyFunc } from '@proxy-func/proxy-func';
 import { AspectValues } from '@aspect-types/aspect-values.type';
-import { convertToObj, getParameterNames } from '@functions/method-params';
+import { mergeWithArgs, extractParameters } from '@functions/method-params';
 
 
 export const addAspect = (
@@ -24,7 +24,7 @@ export const addAspect = (
 
     if (!tsAspectProp[methodName]) {
         const originalMethod = Reflect.get(target, methodName);
-        const parameterNames = getParameterNames(originalMethod);
+        const parametersDefault = extractParameters(originalMethod);
 
         tsAspectProp[methodName] = {
             originalMethod,
@@ -35,7 +35,7 @@ export const addAspect = (
             const container = getTsAspectProp(target);
 
             if (container) {
-                const functionParams = convertToObj(parameterNames, args);
+                const functionParams = mergeWithArgs(parametersDefault, args);
 
                 if (types.isAsyncFunction(originalMethod)) {
                     return asyncProxyFunc(
