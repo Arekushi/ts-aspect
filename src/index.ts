@@ -1,3 +1,4 @@
+import { IndexedKeyValuePair } from '@interfaces/key-value.interface';
 import { resetAllAspects } from '@functions/reset-all-aspects';
 import { Advice } from '@enum/advice.enum';
 import { Aspect, AspectContext } from '@interfaces/aspect.interface';
@@ -13,5 +14,6 @@ export {
     addAspect,
     addAspectToPointcut,
     resetAllAspects,
-    UseAspect
+    UseAspect,
+    IndexedKeyValuePair
 };
