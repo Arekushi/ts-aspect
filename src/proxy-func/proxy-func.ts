@@ -1,3 +1,4 @@
+import { mergeTwoPair } from './../functions/method-params';
 import { postExecution } from '@execution/post-execution';
 import { preExecution } from '@execution/pre-execution';
 import { Advice } from '@enum/advice.enum';
@@ -28,7 +29,7 @@ export function proxyFunc(
     try {
         aspectCtx.returnValue = originalMethod.apply(
             target,
-            modifiedArgs ?? convertToArray(functionParams)
+            convertToArray(mergeTwoPair(functionParams, modifiedArgs))
         );
     } catch (error) {
         if (adviceAspectMap.has(Advice.TryCatch)) {

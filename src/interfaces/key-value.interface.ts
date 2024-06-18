@@ -1,6 +1,6 @@
 export interface IndexedKeyValuePair {
     [key: string]: {
-        index: number;
+        index?: number;
         value?: any;
     };
 }

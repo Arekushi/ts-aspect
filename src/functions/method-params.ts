@@ -1,4 +1,3 @@
-// export const getParameterNames = (method: any): string[] => {
 import { IndexedKeyValuePair } from '@interfaces/key-value.interface';
 
 export const extractParameters = (method: any): IndexedKeyValuePair => {
@@ -35,6 +34,21 @@ export const mergeWithArgs = (
     });
 
     return paramsNames;
+};
+
+export const mergeTwoPair = (
+    source: IndexedKeyValuePair,
+    update: IndexedKeyValuePair
+): IndexedKeyValuePair => {
+    if (!source) {
+        return update;
+    }
+
+    if (!update) {
+        return source;
+    }
+
+    return Object.assign({}, source, update);
 };
 
 export const convertToArray = (

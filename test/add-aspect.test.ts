@@ -162,9 +162,7 @@ describe('Add Aspect', () => {
         aspectAfterReturn.execute.mockImplementation((ctx) => {
             return 42;
         });
-        aspectBefore.execute.mockImplementation((ctx) => {
-            return [42];
-        });
+        aspectBefore.execute.mockImplementation((ctx) => {});
 
         beforeEach(() => {
             jest.clearAllMocks();

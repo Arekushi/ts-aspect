@@ -167,7 +167,7 @@ calculator.add(1300, 37);
 
 The aspect passed to the decorator can be either a class which provides a constructor with no arguments or an instance of an aspect.
 
-### Parameters
+## Parameters
 You can pass additional parameters when using an aspect.
 ```typescript
 class ServiceExample {
@@ -198,29 +198,83 @@ class CheckNullReturnAspect implements Aspect {
 } 
 ```
 
-## Aspect with Before Advice
+## Accessing Function Parameters
+You can access function parameters in your aspect using `ctx.functionParams` property. For example:
+```typescript
+class ServiceExample {
+    @UseAspect(
+        Advice.Before,
+        LogRequestAspect
+    )
+    public createSample(request: Sample) {
+        // ...
+    }
+}
+
+class LogRequestAspect implements Aspect {
+
+    execute(ctx: AspectContext): void {
+        const request = ctx.functionParams.request;
+        console.log(request);
+    }
+}
+```
+
+In this way, I can access any parameter of the original method, just by using the same name.
+
+## Update Function Parameters using Advice.Before Aspect
 You can update the value of parameters passed in the injected function.
 
-```javascript
-class ServiceExample {
-    getRequest(route: string) {
-        //...
+```typescript
+class MagicCalculator {
+    add(a: number, b: number) {
+        return a + b;
     }
 }
 ```
 
-In this example we can handle the parameter `(route: string)` and return it with the updated value.
+In this example we can handle the parameters `a: number` and/or `b: number` and return it with the updated value.
+
+To do this, it is necessary to return an object from the `IndexedKeyValuePair` interface.
+```typescript
+interface IndexedKeyValuePair {
+    [key: string]: {
+        index?: number;
+        value?: any;
+    };
+}
+```
+
+It is a representation that corresponds to the parameters of your original method, so in this case, we can just return this object as follows:
 
 ```javascript
-export class RouteProcessingAspect implements Aspect {
+class ChangeValuesOfCalculatorAspect implements Aspect {
 
-    execute(ctx: AspectContext): any {
-        const route: string = ctx.functionParams.route;
-        return [route.replace(/[&\/\\#,+()$~%.'":*?<>{}]/g, '')];
+    execute(ctx: AspectContext): IndexedKeyValuePair {
+        const a: string = ctx.functionParams.a;
+        return {
+            'a': { value: a + 1 }
+        };
     }
 }
 ```
-In the `getRequest` method, the `route` parameter will be handled before the method call, without the need for the `getRequest` method itself to do so.
+
+So, when the `add` method is actually executed, it will receive values ​​updated by `ChangeValuesOfCalculatorAspect`.
+
+### Without Aspect
+```typescript
+const calculator = new MagicCalculator();
+const result = calculator.add(1, 1);
+console.log(result); // 2
+```
+
+### With Aspect
+```typescript
+const calculator = new MagicCalculator();
+const result = calculator.add(1, 1);
+console.log(result); // 3
+```
+
 
 ## Original Creator
 | [<div><img width=115 src="https://avatars.githubusercontent.com/u/26504678?v=4"><br><sub>Michael Engel</sub></div>][engelmi] <div title="Code">💻</div> |

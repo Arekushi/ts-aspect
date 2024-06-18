@@ -2,6 +2,7 @@ import { mock } from 'jest-mock-extended';
 import { Advice } from '@enum/advice.enum';
 import { Aspect, AspectContext } from '@interfaces/aspect.interface';
 import { UseAspect } from '@decorator/use-aspect';
+import { IndexedKeyValuePair } from '@interfaces/key-value.interface';
 
 const beforeAspect = mock<Aspect>();
 const afterAspect = mock<Aspect>();
@@ -31,7 +32,9 @@ class SampleClass {
         a: number,
         b: number,
         c: number
-    ): void { }
+    ): number {
+        return a + b + c;
+    }
 
     @UseAspect(Advice.Before, beforeAspect)
     public argsWithDefaultValue(
@@ -39,6 +42,11 @@ class SampleClass {
         a = 10
     ): number {
         return 0;
+    }
+
+    @UseAspect(Advice.Before, beforeAspect)
+    public calculate(a: number): number {
+        return a + 10;
     }
 
     @UseAspect(Advice.Before, beforeAspect)
@@ -108,7 +116,7 @@ describe('UseAspect Decorator', () => {
                 b: { index: 1, value: 2 },
                 c: { index: 2, value: 3 },
             },
-            returnValue: undefined,
+            returnValue: 6,
             error: null,
         };
 
@@ -131,6 +139,22 @@ describe('UseAspect Decorator', () => {
     it('should execute the aspect annoted with Advice.TryCatch', () => {
         sample.throwErrorWithTryCatch();
         expect(tryCatchAspect.execute).toHaveBeenCalledTimes(1);
+    });
+
+    it('should correctly update the values of the original method’s parameters', () => {
+        beforeAspect.execute.mockImplementation((ctx): IndexedKeyValuePair => {
+            return {
+                'a': { value: 20 }
+            };
+        });
+
+        const result = sample.calculate(10);
+        const result2 = sample.multipleArgs(1, 1, 1);
+        
+        expect(result).toBe(30);
+        expect(result).not.toBe(20);
+        expect(result2).toBe(22);
+        expect(result2).not.toBe(3);
     });
 
     describe('for async functions', () => {
