@@ -53,8 +53,7 @@ export const UseAspect = (
                             this,
                             propertyKeyString,
                             container[propertyKeyString],
-                            functionParams,
-                            ...args
+                            functionParams
                         );
                     }
                 }
