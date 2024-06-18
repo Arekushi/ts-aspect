@@ -123,7 +123,10 @@ Should output:
   target: Calculator {},
   methodName: 'add',
   advice: Advice.Before,
-  functionParams: { a: 1, b: 2 },
+  functionParams: {
+    a: { index: 0, value: 1 },
+    b: { index: 1, value: 2 }
+    },
   params: null,
   returnValue: null,
   error: null
@@ -214,7 +217,7 @@ class ServiceExample {
 class LogRequestAspect implements Aspect {
 
     execute(ctx: AspectContext): void {
-        const request = ctx.functionParams.request;
+        const request = ctx.functionParams.request.value;
         console.log(request);
     }
 }
@@ -251,7 +254,7 @@ It is a representation that corresponds to the parameters of your original metho
 class ChangeValuesOfCalculatorAspect implements Aspect {
 
     execute(ctx: AspectContext): IndexedKeyValuePair {
-        const a: string = ctx.functionParams.a;
+        const a: string = ctx.functionParams.a.value;
         return {
             'a': { value: a + 1 }
         };
