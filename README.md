@@ -120,16 +120,16 @@ calculator.add(1, 2);
 Should output:
 ```javascript
 {
-  target: Calculator {},
-  methodName: 'add',
-  advice: Advice.Before,
-  functionParams: {
-    a: { index: 0, value: 1 },
-    b: { index: 1, value: 2 }
+    target: Calculator {},
+    methodName: 'add',
+    advice: Advice.Before,
+    functionParams: {
+        a: { index: 0, value: 1 },
+        b: { index: 1, value: 2 }
     },
-  params: null,
-  returnValue: null,
-  error: null
+    params: null,
+    returnValue: null,
+    error: null
 }
 ```
 
